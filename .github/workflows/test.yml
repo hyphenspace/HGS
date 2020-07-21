@@ -18,4 +18,4 @@ jobs:
     - name: Install library dependencies
       run: platformio lib -g install 883
     - name: Run PlatformIO
-      run: platformio run launchpad
+      run: cd launchpad && platformio run 
