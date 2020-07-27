@@ -3,48 +3,54 @@
 #include <SoftwareSerial.h>
 
 #define CLK 2
-#define DIO 3
-#define RX 5
-#define TX 6
-#define BUTTON_PIN 8
+#define DIO 4
+#define RX 11
+#define TX 10
+#define BUTTON_PIN 3
 #define STATUS_PIN 9
 #define COUNTDOWN_NUM 60
+
 
 TM1637Display display(CLK, DIO);
 SoftwareSerial HC12(RX, TX);
 
+volatile int state = 0;
 int startButton = 0;
 void countdown_timer();
 void status_indicator();
+void updateState();
 
 void setup() {
-  // put your setup code here, to run once:
+  display.setBrightness(0x0f);
+  attachInterrupt(digitalPinToInterrupt(3), updateState, FALLING);
   pinMode(STATUS_PIN, OUTPUT);
   pinMode(BUTTON_PIN, INPUT);
+  Serial.begin(9600);
   HC12.begin(9600);
 }
 
 void loop() {
-  startButton = digitalRead(BUTTON_PIN);
-  if (startButton == HIGH) {
-    HC12.write('1'); // Timer beginning 
-    status_indicator();
-    countdown_timer();
-    HC12.write('0'); // Timer ending 
-  } else {
-    // Button not pressed
-    digitalWrite(STATUS_PIN, LOW);
-  }
+	switch(state) {
+		case 0:
+		  Serial.println("READY! YOU CAN NOW PUSH THE BUTTON.");
+		  break;
+
+		case 1:
+		  HC12.write('1'); // Timer beginning
+                  status_indicator();
+                  countdown_timer();
+                  HC12.write('0'); // Timer ending
+		
+		case 2:
+                  // Button not pressed
+                  Serial.println("STOP");
+                  display.clear();
+                  state = 0;
+                  break;
+	}
+
 }
 
-void countdown_timer() {
-  display.setBrightness(0x0f);
-
-  for (int i = COUNTDOWN_NUM; i > 0; i--) {
-    display.showNumberDec(i);
-    delay(1000);
-  }
-}
 
 void status_indicator() {
   for (int i = 0; i < 5; i++) {
@@ -53,4 +59,21 @@ void status_indicator() {
     digitalWrite(STATUS_PIN, LOW);
     delay(50);
   }
+}
+
+void countdown_timer() {
+  int i = COUNTDOWN_NUM;
+  while (i > 0) {
+    display.showNumberDec(i);	  
+    i--;
+    delay(1000);
+   if (state > 1) {
+   break;
+   }
+  }
+
+}
+
+void updateState() {
+   state++;
 }
