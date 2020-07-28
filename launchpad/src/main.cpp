@@ -27,6 +27,7 @@ void hold_down_idle();
 void setup() {
   // put your setup code here, to run once:
   HC12.begin(9600);
+  Serial.begin(9600);
   pinMode(IGNITION_PYRO, OUTPUT);
   pinMode(LED_A, OUTPUT);
   pinMode(LED_B, OUTPUT);
@@ -39,50 +40,42 @@ void setup() {
 }
 
 void loop() {
-  idle_lights();
   while (HC12.available()) {
     incomingData = HC12.read();
-    if (incomingData == '0') {
-      go_lights();
-      hold_down_idle();
-    }
-    if (incomingData == '1') {
-      go_lights();
-      hold_down_go();
-      ignition_sequence();
+    int state = incomingData - 48;
+    switch(state) {
+	case 0:
+      		go_lights();
+		hold_down_idle();
+		break;
+
+	case 1:
+		go_lights();
+		hold_down_go();
+		ignition_sequence();
+		break;
+
+	default:
+    	  	break;
     }
   }
 }
 
 void hold_down_idle() {
-  delay(750);
-  clamp_A.write(120);
-  clamp_B.write(120);
-  clamp_C.write(120);
-  clamp_D.write(120);
-  delay(5000);
+  delay(500);
   clamp_A.write(15);
   clamp_B.write(15);
   clamp_C.write(15);
   clamp_D.write(15);
-  delay(750);
 }
 
 
 void hold_down_go() {
-  for (int i = 0; i < 5; i++) {
-  delay(750);
-  clamp_A.write(15);
-  clamp_B.write(15);
-  clamp_C.write(15);
-  clamp_D.write(15);
-  delay(5000);
+  delay(500);
   clamp_A.write(120);
   clamp_B.write(120);
   clamp_C.write(120);
   clamp_D.write(120);
-  delay(750);
-  }
 }
 
 
@@ -94,16 +87,18 @@ void ignition_sequence() {
 }
 
 void go_lights() { 
+for (int i = 0; i < 15; i++) {
   digitalWrite(LED_A, HIGH);
   digitalWrite(LED_B, HIGH);
   digitalWrite(LED_C, HIGH);
   digitalWrite(LED_D, HIGH);
-  delay(750);
+  delay(250);
   digitalWrite(LED_A, LOW);
   digitalWrite(LED_B, LOW);
   digitalWrite(LED_C, LOW);
   digitalWrite(LED_D, LOW);
-  delay(750);  
+  delay(250);  
+ }
 }
 
 void idle_lights() {
