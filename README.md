@@ -1,7 +1,6 @@
-# spiral-launchpad
-![PlatformIO CI](https://github.com/hyphenspace/spiral-launchpad/workflows/PlatformIO%20CI/badge.svg)
+![](holddown.gif)
 
-Code that powers the launchpad computer.
+![PlatformIO CI](https://github.com/hyphenspace/spiral-launchpad/workflows/PlatformIO%20CI/badge.svg)
 
 # Directory Structure
 * controller -- Code that handles communication with launchpad
