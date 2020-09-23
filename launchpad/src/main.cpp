@@ -25,7 +25,6 @@ void hold_down_go();
 void hold_down_idle();
 
 void setup() {
-  // put your setup code here, to run once:
   HC12.begin(9600);
   Serial.begin(9600);
   pinMode(IGNITION_PYRO, OUTPUT);
@@ -40,23 +39,24 @@ void setup() {
 }
 
 void loop() {
-  while (HC12.available()) {
+while (1) {
     incomingData = HC12.read();
     int state = incomingData - 48;
-    switch(state) {
+  switch(state) {
 	case 0:
-      		go_lights();
+    go_lights();
 		hold_down_idle();
 		break;
 
 	case 1:
+    hold_down_go();
 		go_lights();
-		hold_down_go();
 		ignition_sequence();
 		break;
 
 	default:
-    	  	break;
+      idle_lights();
+    	break;
     }
   }
 }
