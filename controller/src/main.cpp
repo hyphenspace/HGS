@@ -39,17 +39,18 @@ void loop() {
 
 		case 1: // COUNTDOWN
 		  HC12.write('0'); // Timer start
-                  ready_indicator();
-                  countdown_timer();
+          ready_indicator();
+          countdown_timer();
 		  break; 
 
 		case 2: // ABORT
-                  display.clear();
-                  state = 0;
-                  break;
+		  HC12.write('1');
+		  display.clear();
+          state = 0;
+		  break;
 	        
 		case 3: // LAUNCH
-		  HC12.write('1'); // Timer done
+		  HC12.write('2'); // Timer done
 		  state = 0;
 		  break;
 
@@ -100,7 +101,7 @@ void updateState() {
  unsigned long interrupt_time = millis();
  if (interrupt_time - last_interrupt_time > 200) {
       if (state < 2) {
-	 state++;
+	      state++;
       }
  }
  last_interrupt_time = interrupt_time;

@@ -21,8 +21,8 @@ Servo clamp_D;
 void idle_lights();
 void go_lights();
 void ignition_sequence();
-void hold_down_go();
-void hold_down_idle();
+void close_clamps();
+void open_clamps();
 
 void setup() {
   HC12.begin(9600);
@@ -42,26 +42,31 @@ void loop() {
 while (1) {
     incomingData = HC12.read();
     int state = incomingData - 48;
-  switch(state) {
-	case 0:
-    go_lights();
-		hold_down_idle();
-		break;
-
-	case 1:
-    hold_down_go();
+    switch(state) {
+		case 0:
+		close_clamps();
 		go_lights();
-		ignition_sequence();
-		break;
+        break;
 
-	default:
-      idle_lights();
-    	break;
+		case 1:
+		    open_clamps();
+		    state = -1;
+	 	    break;
+
+		case 2:
+		    open_clamps();
+		    go_lights();
+		    ignition_sequence();
+		    break;  
+
+		default:
+		    idle_lights();
+    	    break;
     }
   }
 }
 
-void hold_down_idle() {
+void close_clamps() {
   delay(500);
   clamp_A.write(15);
   clamp_B.write(15);
@@ -70,7 +75,7 @@ void hold_down_idle() {
 }
 
 
-void hold_down_go() {
+void open_clamps() {
   delay(500);
   clamp_A.write(120);
   clamp_B.write(120);
