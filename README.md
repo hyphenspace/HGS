@@ -1,4 +1,6 @@
-![](holddown.gif)
+<p align="center">
+  <img src="https://imgur.com/EFZqWFS.png"/>
+</p>
 
 ![PlatformIO CI](https://github.com/hyphenspace/spiral-launchpad/workflows/PlatformIO%20CI/badge.svg)
 
