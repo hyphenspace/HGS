@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://imgur.com/EFZqWFS.png"/>
+  <img src="https://imgur.com/9NhuUDE.png"/>
 </p>
 
 ![PlatformIO CI](https://github.com/hyphenspace/spiral-launchpad/workflows/PlatformIO%20CI/badge.svg)
