@@ -2,13 +2,14 @@
 #include <SoftwareSerial.h>
 #include <Servo.h>
 
-#define IGNITION_PYRO 2 
-#define LED_A 10
-#define LED_B 9
-#define LED_C 8
-#define LED_D 7
-#define RX 5
-#define TX 6
+#define IGNITION_PYRO_A   13
+#define IGNITION_PYRO_B   8 
+#define LED_A             12
+#define LED_B             11
+#define LED_C             10
+#define LED_D             9
+#define RX                7
+#define TX                6
 
 char incomingData;
 SoftwareSerial HC12(RX, TX);
@@ -26,8 +27,8 @@ void open_clamps();
 
 void setup() {
   HC12.begin(9600);
-  Serial.begin(9600);
-  pinMode(IGNITION_PYRO, OUTPUT);
+  pinMode(IGNITION_PYRO_A, OUTPUT);
+  pinMode(IGNITION_PYRO_B, OUTPUT);
   pinMode(LED_A, OUTPUT);
   pinMode(LED_B, OUTPUT);
   pinMode(LED_C, OUTPUT);
@@ -44,16 +45,16 @@ while (1) {
     int state = incomingData - 48;
     switch(state) {
 		case 0:
-		close_clamps();
-		go_lights();
+		    close_clamps();
+		    go_lights();
         break;
 
-		case 1:
+		case 1: // ABORT
 		    open_clamps();
 		    state = -1;
 	 	    break;
 
-		case 2:
+		case 2: 
 		    open_clamps();
 		    go_lights();
 		    ignition_sequence();
@@ -61,7 +62,7 @@ while (1) {
 
 		default:
 		    idle_lights();
-    	    break;
+    	  break;
     }
   }
 }
@@ -85,9 +86,9 @@ void open_clamps() {
 
 
 void ignition_sequence() {
-  digitalWrite(IGNITION_PYRO, HIGH);
-  delay(500);
-  digitalWrite(IGNITION_PYRO, LOW);
+  digitalWrite(IGNITION_PYRO_A, HIGH);
+  delay(2500);
+  digitalWrite(IGNITION_PYRO_A, LOW);
   delay(250);
 }
 
@@ -97,12 +98,12 @@ for (int i = 0; i < 15; i++) {
   digitalWrite(LED_B, HIGH);
   digitalWrite(LED_C, HIGH);
   digitalWrite(LED_D, HIGH);
-  delay(250);
+  delay(150);
   digitalWrite(LED_A, LOW);
   digitalWrite(LED_B, LOW);
   digitalWrite(LED_C, LOW);
   digitalWrite(LED_D, LOW);
-  delay(250);  
+  delay(150);  
  }
 }
 
@@ -111,10 +112,10 @@ void idle_lights() {
   digitalWrite(LED_B, HIGH);
   digitalWrite(LED_C, HIGH);
   digitalWrite(LED_D, HIGH);
-  delay(1000);
+  delay(750);
   digitalWrite(LED_A, LOW);
   digitalWrite(LED_B, LOW);
   digitalWrite(LED_C, LOW);
   digitalWrite(LED_D, LOW);
-  delay(1000);  
+  delay(750);  
  }
