@@ -33,10 +33,10 @@ void setup() {
   pinMode(LED_B, OUTPUT);
   pinMode(LED_C, OUTPUT);
   pinMode(LED_D, OUTPUT);
-  clamp_A.attach(3);
-  clamp_B.attach(4);
-  clamp_C.attach(11);
-  clamp_D.attach(12);
+  clamp_A.attach(2);
+  clamp_B.attach(3);
+  clamp_C.attach(4);
+  clamp_D.attach(5);
 }
 
 void loop() {
@@ -47,7 +47,7 @@ while (1) {
 		case 0:
 		    close_clamps();
 		    go_lights();
-        break;
+        	    break;
 
 		case 1: // ABORT
 		    open_clamps();
@@ -62,7 +62,7 @@ while (1) {
 
 		default:
 		    idle_lights();
-    	  break;
+    	  	    break;
     }
   }
 }
